@@ -40,7 +40,7 @@ def fileDo():
 def testPing():
 
     # 传入inventory路径
-    ansible = runner.ansibleRunner('/etc/ansible/hosts')
+    ansible = runner.ansibleRunner('/etc/ansible/inventory/hosts')
     # 获取服务器磁盘信息
     ansible.run('all', 'setup', "filter='ansible_mounts'")
     # 结果
