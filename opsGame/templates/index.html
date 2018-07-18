@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Salt-Plus</title>
+    <title>opsGame</title>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -19,20 +19,20 @@
     <![endif]-->
     <link rel="stylesheet" href="../../static/css/simple-sidebar.css">
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
-
+    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.css">
 </head>
 
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
       <ul class="navbar-nav">
         <li>
-          <h2><span class="badge badge-secondary">Salt-Plus</span></h2>
+          <a href="/"><h2><span class="badge badge-secondary">Ansible-Plus</span></h2></a>
         </li>
       </ul>
     </nav>
-    <div id="wrapper">
+    <div id="wrapper" style="margin-top:63px;">
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
@@ -41,7 +41,7 @@
                     <a href="/ops/fileDo">FileDo</a>
                 </li>
                 <li>
-                    <a href="#">SaltStack</a>
+                    <a href="/command/">Command</a>
                 </li>
                 <li>
                     <a href="#">Overview</a>
@@ -73,8 +73,7 @@
             </div>
         </div>
         <!-- /#page-content-wrapper -->
-        {% block fileDo %}{% endblock %}
-        {% block cmdDo %}{% endblock %}
+        {% block content %}{% endblock %}
 
     </div>
     <!-- /#wrapper -->
@@ -84,6 +83,8 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="../../static/js/bootstrap.min.js"></script>
+    <!-- some tools javascript-->
+    <script src="../../static/js/ajax.js"></script>
 
     <!-- Menu Toggle Script -->
     <script>

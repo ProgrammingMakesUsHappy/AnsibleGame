@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
-import opsGame
+from ansible.executor.playbook_executor import PlaybookExecutor
+
 
 from collections import namedtuple
 from ansible.parsing.dataloader import DataLoader
@@ -9,7 +10,6 @@ from ansible.inventory.manager import InventoryManager
 from ansible.playbook.play import Play
 from ansible.executor.task_queue_manager import TaskQueueManager
 from tempfile import NamedTemporaryFile
-# from ansible.MyInventory import MyInventory
 from ansible.plugins.callback import CallbackBase
 import os
 
