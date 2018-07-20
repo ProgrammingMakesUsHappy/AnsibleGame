@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1 style="text-align: center">File do test!</h1>
+ <div style="padding-left: 200px; padding-right: 200px; margin: 0 auto;">
+    <form  method="POST">
+        <div class="form-group">
+            <label for="host">Hosts:</label>
+            <input type="text" class="form-control" id="host" placeholder="Enter hostGroup/all/ip">
+        </div>
+        <div class="form-group">
+          <label for="src">Src:</label>
+          <input type="text" class="form-control" id="src" placeholder="Enter where to get">
+        </div>
+        <div class="dest">
+          <label for="module_args">Dest:</label>
+          <input type="text" class="form-control" id="dest" placeholder="Enter where to put">
+        </div>
+        <button type='button' id="fileDo"> submit</button>
+
+    </form>
+
+    <div>
+        <p id="p1" style="text-align: center">RESULT:</p>
+        <br>
+        <p id="p2"></p>
+
+
+    </div>
+
+</div>
+{% endblock %}
