@@ -31,11 +31,11 @@ inventory文件夹自行创建，hosts自行新建
 
 # API  
 ### 进程监控
-HostIP、HostName、CPU、Memory、runTime、startTime
+pName（进程名）、HostIP、HostName、CPU、Memory、runTime、startTime
 
 # 数据库
 ### 主机列表
 HostIP、HostName、Group （依据赛事举办方提供的列表依情况导入）
 ### 进程监控表
-HostIP、HostName、CPU、Memory、runTime、startTime、Group
+pName、HostIP、HostName、CPU、Memory、runTime、startTime、Group
 ### 资源监控表
