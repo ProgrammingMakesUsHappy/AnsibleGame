@@ -1,4 +1,6 @@
 # opsGame
+修改代码前先pull
+git确认功能修改以后及时提交push
 
 #### opsGame
 Flask + Ansible + Pycharm + Python3 + MySQL 
