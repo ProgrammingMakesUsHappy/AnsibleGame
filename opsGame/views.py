@@ -166,3 +166,18 @@ def testPing():
     print(unreachable)
 
     return "test ok!"
+
+
+@app.route('/testPost/', methods=["GET", "POST"])
+def testPost():
+    jsonData = request.get_json()
+    print(jsonData)
+    print(jsonData['HostIP'])
+    print(jsonData['HostName'])
+    print(jsonData["CPU"])
+    print(jsonData["Memory"])
+    print(jsonData["RunTime"])
+    print(jsonData["StartTime"])
+
+
+    return 'ok'
