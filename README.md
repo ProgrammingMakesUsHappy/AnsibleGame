@@ -31,11 +31,25 @@ inventory文件夹自行创建，hosts自行新建
 
 # API  
 ### 进程监控
-pName（进程名）、HostIP、HostName、CPU、Memory、runTime、startTime
+pName（进程名）、HostIP、HostName、CPU、Memory、RunTime、StartTime
+
+### 心跳进程
+HostIP、HostName、HeartTime
 
 # 数据库
 ### 主机列表
 HostIP、HostName、Group （依据赛事举办方提供的列表依情况导入）
 ### 进程监控表
 pName、HostIP、HostName、CPU、Memory、runTime、startTime、Group
+(保证一台主机的某一进程信息只有一条最新的数据，即API信息落库时,第一次使用Insert,后面使用update)
 ### 资源监控表
+
+
+# SHELL脚本应用
+### monitor.sh
+>进程监控应用，有一个参数 即 进程名或者运行使用的command 如『python runserver.py runserver』
+30s更新一次进程信息，如果服务器未准确接收参数，将5s内重新向服务器post 进程的json格式信息
+```
+example:
+    sh monitor.sh 'python runserver.py runserver'
+```
