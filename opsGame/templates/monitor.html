@@ -1,4 +1,32 @@
 {% extends "index.html" %}
 {% block content %}
-    
+<div style="position:relative; float:left; margin:10px;padding-left:42px;">
+    <div style=" position:relative;float:left;  border-radius: 15px 50px 30px;background: grey;padding: 20px;width: 250px;height: 100px; ">
+
+       <h2 style="float:left;"><i class="fa fa-heartbeat" style="font-size:48px;color:#00FF00;"></i>ON:</h2>
+        <p id="onHosts" style="float:right;font-size:28px;padding:0px;margin:8px;color:#00FF00">1000</p>
+
+   </div>
+    <div style=" position:relative;float:left;  border-radius: 15px 50px 30px;background: grey;padding: 20px;width: 250px;height: 100px; ">
+
+       <h2 style="float:left;"><i class="fa fa-heartbeat" style="font-size:48px;color:red"></i>OFF:</h2>
+       <p id="offHosts" style="float:right;font-size:28px;padding:0px;margin:8px;color:#00FF00">1000</p>
+   </div>
+    <div style=" position:relative;float:left;  border-radius: 15px 50px 30px;background: grey;padding: 20px;width: 250px;height: 100px; ">
+
+       <h2 style="float:left;"><i class="fa fa-heartbeat" style="font-size:48px;color:blue"></i>AB:</h2>
+        <p id="" style="float:right;font-size:28px;padding:0px;margin:8px;color:#00FF00">1000</p>
+   </div>
+    <div style=" position:relative;float:left;  border-radius: 15px 50px 30px;background: grey;padding: 20px;width: 250px;height: 100px; ">
+
+       <h2 style="float:left;"><i class="fa fa-heartbeat" style="font-size:48px;color:yellow"></i>CD:</h2>
+        <p id="" style="float:right;font-size:28px;padding:0px;margin:8px;color:#00FF00">1000</p>
+   </div>
+    <div class="container-fluid" style="position:relative; float:left; margin:10px;padding-left:42px;background-color:#C0C0C0;border:2px solid;border-radius:25px;width:985px;">
+        <div style="height:100px;width:1050px;"></div>
+
+    </div>
+</div>
+
+
 {% endblock %}

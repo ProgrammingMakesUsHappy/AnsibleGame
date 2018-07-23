@@ -1,6 +1,9 @@
 # opsGame
 修改代码前先pull
 git确认功能修改以后及时提交push
+mysql 建表语句位于mysql_create中
+cpu、memory 字段在client传会的json中是百分比格式，需要换算为float型存入
+filesystem中usage也需要转换百分比为float型
 
 #### opsGame
 Flask + Ansible + Pycharm + Python3 + MySQL 
