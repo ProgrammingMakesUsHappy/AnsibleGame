@@ -15,12 +15,11 @@ from ansible.plugins.callback import CallbackBase
 from ansibleApi import runner
 
 from opsGame import app, db
-# from opsGame.models import hostInfo
 from flask import render_template
 import commands, json
 
 # 传入inventory路径
-ansible = runner.ansibleRunner('/etc/ansible/inventory/hosts')
+ansible = runner.ansibleRunner('/etc/ansible/Inventory/hosts')
 
 
 # 主页
@@ -31,14 +30,14 @@ def index():
 
 @app.route('/FileDo/', methods=['GET', 'POST'])
 def fileDo():
-    if request.method=="POST":
+    if request.method == "POST":
         jsonData = request.get_json()
         print(jsonData)
         host = jsonData['host']
         module_name = jsonData['src']
         module_args = jsonData['dest']
 
-        ansible.run(host, 'copy', 'src='+module_name+' '+'dest='+module_args)
+        ansible.run(host, 'copy', 'src=' + module_name + ' ' + 'dest=' + module_args)
         # 结果
         result = ansible.get_result()
         # 成功
@@ -97,6 +96,8 @@ def shell():
     data[host]：机器的具体状态列表，key中保存stdout_lines
     
 '''
+
+
 @app.route('/Command/', methods=["GET"])
 def commandPage():
     return render_template('command.html')
@@ -104,14 +105,14 @@ def commandPage():
 
 @app.route('/Command/', methods=["GET", "POST"])
 def commandRun():
-    if request.method=="POST":
+    if request.method == "POST":
         jsonData = request.get_json()
         print(jsonData)
         host = jsonData['host']
         module_name = jsonData['module_name']
         module_args = jsonData['module_args']
 
-        ansible.run(host, module_name,module_args)
+        ansible.run(host, module_name, module_args)
         # 结果
         result = ansible.get_result()
         # 成功
@@ -125,9 +126,9 @@ def commandRun():
         # # print(unreachable)
         data = {}
         data['status'] = 'success'
-        data['successHosts'] = result['success'].keys()
-        data['failedHosts'] = result['failed'].keys()
-        data['unreachableHosts'] = result['unreachable'].keys()
+        data['successHosts'] = list(result['success'].keys())
+        data['failedHosts'] = list(result['failed'].keys())
+        data['unreachableHosts'] = list(result['unreachable'].keys())
         data['hosts'] = {}
         if result['success']:
             for dict in result['success']:
@@ -145,7 +146,6 @@ def commandRun():
 
 @app.route('/ops/testPing', methods=['GET'])
 def testPing():
-
     # 传入inventory路径
     # ansible = runner.ansibleRunner('/etc/ansible/inventory/hosts')
 
@@ -168,6 +168,7 @@ def testPing():
     return "test ok!"
 
 
+# 进程监控测试 API
 @app.route('/testPost/', methods=["GET", "POST"])
 def testPost():
     jsonData = request.get_json()
@@ -179,5 +180,12 @@ def testPost():
     print(jsonData["RunTime"])
     print(jsonData["StartTime"])
 
+    return 'ok'
 
+
+# 文件系统监控 测试API
+@app.route('/filesystem/', methods=["GET", "POST"])
+def fs():
+    jsonData = request.get_json()
+    print(jsonData)
     return 'ok'
