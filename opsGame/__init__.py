@@ -14,4 +14,4 @@ babel = Babel(app)
 db = SQLAlchemy(app)
 bootstrap = Bootstrap(app)
 
-from opsGame import views, models,dataShowViews
+from opsGame import views, models, dataShowViews

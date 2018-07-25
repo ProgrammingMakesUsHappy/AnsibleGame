@@ -2,16 +2,8 @@
 #  -*- endcoding=UTF-8 -*-
 import time
 
-import flask
 from flask import request, session, url_for, json
 from sqlalchemy import and_
-from werkzeug.utils import redirect
-from ansible.inventory.manager import InventoryManager
-from ansible.playbook.play import Play
-from ansible.vars.manager import VariableManager
-from ansible.parsing.dataloader import DataLoader
-from ansible.plugins.callback import CallbackBase
-
 from ansibleApi import runner
 
 from opsGame import app, db
@@ -19,6 +11,8 @@ from flask import render_template
 import commands, json
 
 # 传入inventory路径
+from opsGame.models import processMonitor,fileSystemMonitor, hosts
+
 ansible = runner.ansibleRunner('/etc/ansible/Inventory/hosts')
 
 
@@ -32,7 +26,7 @@ def index():
 def fileDo():
     if request.method == "POST":
         jsonData = request.get_json()
-        print(jsonData)
+        # print(jsonData)
         host = jsonData['host']
         module_name = jsonData['src']
         module_args = jsonData['dest']
@@ -46,26 +40,21 @@ def fileDo():
         failed = result['failed']
         # 不可到达
         unreachable = result['unreachable']
-        # print(succ)
-        # print(failed)
-        # # print(unreachable)
         data = {}
         data['status'] = 'success'
-        data['successHosts'] = result['success'].keys()
-        data['failedHosts'] = result['failed'].keys()
-        data['unreachableHosts'] = result['unreachable'].keys()
+        data['successHosts'] = list(result['success'].keys())
+        data['failedHosts'] = list(result['failed'].keys())
+        data['unreachableHosts'] = list(result['unreachable'].keys())
         data['hosts'] = {}
         if result['success']:
             for dict in result['success']:
                 data['hosts'][dict] = result['success'][dict]
         if result['failed']:
-            for dict in result['failded']:
+            for dict in result['failed']:
                 data['hosts'][dict] = result['failed'][dict]
         if result['unreachable']:
             for dict in result['unreachable']:
                 data['hosts'][dict] = result['unreachable'][dict]
-            # print(result['unreachable'][dict])
-        print(data)
         return json.dumps(data)
 
     return render_template('filedo.html')
@@ -96,11 +85,6 @@ def shell():
     data[host]：机器的具体状态列表，key中保存stdout_lines
     
 '''
-
-
-@app.route('/Command/', methods=["GET"])
-def commandPage():
-    return render_template('command.html')
 
 
 @app.route('/Command/', methods=["GET", "POST"])
@@ -134,21 +118,17 @@ def commandRun():
             for dict in result['success']:
                 data['hosts'][dict] = result['success'][dict]
         if result['failed']:
-            for dict in result['failded']:
+            for dict in result['failed']:
                 data['hosts'][dict] = result['failed'][dict]
         if result['unreachable']:
             for dict in result['unreachable']:
                 data['hosts'][dict] = result['unreachable'][dict]
-            # print(result['unreachable'][dict])
-        print(data)
         return json.dumps(data)
+    return render_template('command.html')
 
 
 @app.route('/ops/testPing', methods=['GET'])
 def testPing():
-    # 传入inventory路径
-    # ansible = runner.ansibleRunner('/etc/ansible/inventory/hosts')
-
     # 获取服务器磁盘信息
     # ansible.run('all', 'setup', "filter='ansible_mounts'")
     ansible.run('all', 'command', 'ping 192.168.14.131 -c 5')
@@ -168,24 +148,49 @@ def testPing():
     return "test ok!"
 
 
-# 进程监控测试 API
-@app.route('/testPost/', methods=["GET", "POST"])
-def testPost():
-    jsonData = request.get_json()
-    print(jsonData)
-    print(jsonData['HostIP'])
-    print(jsonData['HostName'])
-    print(jsonData["CPU"])
-    print(jsonData["Memory"])
-    print(jsonData["RunTime"])
-    print(jsonData["StartTime"])
-
+# 进程监控 测试API
+# 30s脚本传回json，若服务器无反馈3s持续向服务器发送
+@app.route('/processPost/', methods=["GET", "POST"])
+def processmonitor():
+    if request.method == "POST":
+        jsonData = request.get_json()
+        print(jsonData)
+        process = processMonitor.query.filter(and_(processMonitor.pName == jsonData['pName'], processMonitor.HostIP == jsonData['HostIP'])).first()
+        tempHost = hosts.query.filter_by(hostIP=jsonData['HostIP']).first()
+        group = tempHost.hostGroup
+        now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        if process is None:
+            db.session.add(processMonitor(jsonData['pName'], jsonData['HostName'], jsonData['HostIP'], jsonData["CPU"],
+                                          jsonData['Memory'], jsonData['RunTime'], jsonData["StartTime"],
+                                          group, now))
+        else:
+            processMonitor.query.filter_by(pName=jsonData['pName'], HostIP=jsonData['HostIP']).update(
+                {'CPU': jsonData["CPU"],
+                 'Memory': jsonData['Memory'],
+                 'RunTime': jsonData['RunTime'],
+                 'Time': now})
+    db.session.commit()
     return 'ok'
 
 
 # 文件系统监控 测试API
-@app.route('/filesystem/', methods=["GET", "POST"])
+# 300s监控脚本传回json，无反馈3s间断向服务器持续发送
+@app.route('/FSMonitor/', methods=["GET", "POST"])
 def fs():
-    jsonData = request.get_json()
-    print(jsonData)
+    if request.method == "POST":
+        jsonData = request.get_json()
+        print(jsonData)
+        fileSystem = fileSystemMonitor.query.filter(
+            and_(fileSystemMonitor.FilePath == jsonData['FilePath'], fileSystemMonitor.HostIP == jsonData['HostIP'])).first()
+        tempHost = hosts.query.filter_by(hostIP=jsonData['HostIP']).first()
+        group = tempHost.hostGroup
+        now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        if fileSystem is None:
+            db.session.add(fileSystemMonitor(jsonData['FilePath'], jsonData['HostIP'], jsonData['HostName'], jsonData['FS'],
+                                          jsonData['Volume'], jsonData['Usage'], now, group))
+        else:
+            fileSystemMonitor.query.filter_by(FilePath=jsonData['FilePath'], HostIP=jsonData['HostIP']).update(
+                {'Time': now,
+                 'Usage': jsonData['Usage']})
+    db.session.commit()
     return 'ok'

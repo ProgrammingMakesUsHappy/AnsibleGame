@@ -10,10 +10,12 @@ class processMonitor(db.Model):
     pName = db.Column(db.String(45), nullable=False)
     HostIP = db.Column(db.String(45), nullable=False)
     HostName = db.Column(db.String(45), nullable=False)
-    CPU = db.Column(db.Integer, nullable=False)
-    Memory = db.Column(db.Integer, nullable=False)
+    CPU = db.Column(db.Float, nullable=False)
+    Memory = db.Column(db.Float, nullable=False)
     RunTime = db.Column(db.String(45), nullable=False)
     StartTime = db.Column(db.String(45), nullable=False)
+    Group = db.Column(db.String(45), nullable=True)
+    Time = db.Column(db.String(45), nullable=False)
 
 
     def __init__(self, *args):
@@ -21,10 +23,12 @@ class processMonitor(db.Model):
             self.pName = 'TestScholl'
             self.HostName = "TestLocation"
             self.HostIP = "192.168.1.1"
-            self.CPU = 0
-            self.Memory = 0
+            self.CPU = 0.0
+            self.Memory = 0.0
             self.RunTime = "00:00"
             self.StartTime = "00:00"
+            self.Group = "null"
+            self.Time = "2018-07-25 11:59"
         elif args:
             self.pName = args[0]
             self.HostName = args[1]
@@ -33,6 +37,8 @@ class processMonitor(db.Model):
             self.Memory = args[4]
             self.RunTime = args[5]
             self.StartTime = args[6]
+            self.Group = args[7]
+            self.Time = args[8]
 
 
     def __iter__(self):
@@ -42,7 +48,9 @@ class processMonitor(db.Model):
                 self.CPU,
                 self.Memory,
                 self.RunTime,
-                self.StartTime]
+                self.StartTime,
+                self.Group,
+                self.Time]
 
 
 class fileSystemMonitor(db.Model):
@@ -53,8 +61,10 @@ class fileSystemMonitor(db.Model):
     HostName = db.Column(db.String(45), nullable=False)
     FilePath = db.Column(db.String(128), nullable=False)
     FS = db.Column(db.String(128), nullable=False)
-    Volume = db.Column(db.Integer, nullable=False)
-    Usage = db.Column(db.Float, nullable=False)
+    Volume = db.Column(db.String(45), nullable=False)
+    Usage = db.Column(db.String, nullable=False)
+    Time = db.Column(db.String(45), nullable=False)
+    Group = db.Column(db.String(45))
 
 
     def __init__(self, *args):
@@ -63,8 +73,10 @@ class fileSystemMonitor(db.Model):
             self.HostName = "TestLocation"
             self.HostIP = "192.168.1.1"
             self.FS = "/dev/sda1"
-            self.Volume = 0
-            self.Usage = "00:00"
+            self.Volume = "0"
+            self.Usage = "0"
+            self.Time = "2018-07-25 11:59"
+            self.Group = "web"
 
         elif args:
             self.FilePath = args[0]
@@ -73,6 +85,8 @@ class fileSystemMonitor(db.Model):
             self.FS = args[3]
             self.Volume = args[4]
             self.Usage = args[5]
+            self.Time = args[6]
+            self.Group = args[7]
 
 
 
@@ -82,4 +96,31 @@ class fileSystemMonitor(db.Model):
                 self.HostName,
                 self.FS,
                 self.Volume,
-                self.Usage]
+                self.Usage,
+                self.Time,
+                self.Group]
+
+
+class hosts(db.Model):
+    __tablename__ = 'hosts'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    hostIP = db.Column(db.String(45), nullable=False)
+    hostName = db.Column(db.String(45), nullable=True)
+    hostGroup = db.Column(db.String(45), nullable=False)
+
+    def __init__(self, *args):
+        if not args :
+            self.hostIP = ''
+            self.hostName = "deafult"
+            self.hostGroup = ''
+
+        elif args:
+            self.hostIP = args[0]
+            self.hostName = args[1]
+            self.hostGroup = args[2]
+
+    def __iter__(self):
+        return [self.hostIP,
+                self.hostName,
+                self.hostGroup]

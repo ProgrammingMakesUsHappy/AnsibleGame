@@ -29,13 +29,14 @@ CREATE TABLE `processMonitor` (
   `pName` varchar(45) NOT NULL,
   `HostIP` varchar(45) NOT NULL,
   `HostName` varchar(45) NOT NULL,
-  `CPU` int(11) NOT NULL,
+  `CPU` float NOT NULL,
   `Memory` int(11) NOT NULL,
   `RunTime` varchar(45) NOT NULL,
   `StartTime` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `pName_UNIQUE` (`pName`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `Time` varchar(45) NOT NULL DEFAULT 'now()',
+  `Group` varchar(45) NOT NULL DEFAULT 'web',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,6 +45,7 @@ CREATE TABLE `processMonitor` (
 
 LOCK TABLES `processMonitor` WRITE;
 /*!40000 ALTER TABLE `processMonitor` DISABLE KEYS */;
+INSERT INTO `processMonitor` VALUES (1,'top','192.168.3.1','qiushi-X270-W10DG',0,0,'0:02','08:38','2018-07-25 11:16:51','host'),(2,'top','192.168.3.128','localhost.localdomain',0,0,'0:00','19:17','2018-07-25 11:21:20','');
 /*!40000 ALTER TABLE `processMonitor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -56,4 +58,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-07-23 20:58:02
+-- Dump completed on 2018-07-25 11:21:25

@@ -18,34 +18,29 @@ USE `gamedb`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `fileSystemMonitor`
+-- Table structure for table `hosts`
 --
 
-DROP TABLE IF EXISTS `fileSystemMonitor`;
+DROP TABLE IF EXISTS `hosts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `fileSystemMonitor` (
+CREATE TABLE `hosts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `FilePath` varchar(128) NOT NULL,
-  `HostIP` varchar(45) NOT NULL,
-  `HostName` varchar(45) NOT NULL,
-  `FS` varchar(128) NOT NULL,
-  `Volume` varchar(45) NOT NULL,
-  `Usage` varchar(45) NOT NULL,
-  `Time` varchar(45) NOT NULL DEFAULT 'now()',
-  `Group` varchar(45) NOT NULL DEFAULT 'web',
+  `hostName` varchar(45) DEFAULT NULL,
+  `hostIP` varchar(45) NOT NULL,
+  `hostGroup` varchar(45) NOT NULL DEFAULT 'web',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `fileSystemMonitor`
+-- Dumping data for table `hosts`
 --
 
-LOCK TABLES `fileSystemMonitor` WRITE;
-/*!40000 ALTER TABLE `fileSystemMonitor` DISABLE KEYS */;
-INSERT INTO `fileSystemMonitor` VALUES (1,'/usr/','192.168.3.1','qiushi-X270-W10DG','/dev/nvme0n1p4','136G','34%','2018-07-25 09:26:08',''),(2,'/var/','192.168.3.1','qiushi-X270-W10DG','/dev/nvme0n1p4','136G','34%','2018-07-25 09:26:27','host'),(3,'','192.168.3.1','qiushi-X270-W10DG','udev','3.9G','0%','2018-07-25 10:43:17','host');
-/*!40000 ALTER TABLE `fileSystemMonitor` ENABLE KEYS */;
+LOCK TABLES `hosts` WRITE;
+/*!40000 ALTER TABLE `hosts` DISABLE KEYS */;
+INSERT INTO `hosts` VALUES (1,'web128','192.168.3.128',''),(2,'web129','192.168.3.129',''),(3,'web130','192.168.3.130',''),(4,'host','192.168.3.1','host');
+/*!40000 ALTER TABLE `hosts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
