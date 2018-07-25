@@ -7,7 +7,7 @@ from opsGame import app, db
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
-from opsGame.models import processMonitor, fileSystemMonitor
+from opsGame.models import processMonitor, fileSystemMonitor, hosts
 
 
 
@@ -53,7 +53,26 @@ class processMonitorViews(ModelView):
     column_filters = ('pName', 'CPU', 'HostIP', 'HostName', 'RunTime', 'StartTime', 'Memory', 'Group',
                       'Time')
 
+
+class hostsView(ModelView):
+    # 这三个变量定义管理员是否可以增删改，默认为True
+    can_delete = False
+    can_edit = False
+    can_create = False
+    # 这里是为了自定义显示的column名字
+    column_labels = dict(
+        # userName = u'用户名',
+
+    )
+    # 如果不想显示某些字段，可以重载这个变量
+    column_exclude_list = (
+        # 'userPwd'
+        # 'table'
+    )
+    column_filters = ('hostName', 'hostIP', 'hostGroup' )
+
 admin = Admin(app, name=u'后台监控系统')
 
 admin.add_view(processMonitorViews(processMonitor, db.session, name=u'进程监控'))
 admin.add_view(fileSystemView(fileSystemMonitor, db.session, name=u"文件系统监控"))
+admin.add_view(hostsView(hosts, db.session, name=u'主机列表'))

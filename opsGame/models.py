@@ -62,7 +62,7 @@ class fileSystemMonitor(db.Model):
     FilePath = db.Column(db.String(128), nullable=False)
     FS = db.Column(db.String(128), nullable=False)
     Volume = db.Column(db.String(45), nullable=False)
-    Usage = db.Column(db.String, nullable=False)
+    Usage = db.Column(db.Integer, nullable=False)
     Time = db.Column(db.String(45), nullable=False)
     Group = db.Column(db.String(45))
 
@@ -74,7 +74,7 @@ class fileSystemMonitor(db.Model):
             self.HostIP = "192.168.1.1"
             self.FS = "/dev/sda1"
             self.Volume = "0"
-            self.Usage = "0"
+            self.Usage = 0
             self.Time = "2018-07-25 11:59"
             self.Group = "web"
 

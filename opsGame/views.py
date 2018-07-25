@@ -12,6 +12,7 @@ import commands, json
 
 # 传入inventory路径
 from opsGame.models import processMonitor,fileSystemMonitor, hosts
+from opsGame.tools import tool
 
 ansible = runner.ansibleRunner('/etc/ansible/Inventory/hosts')
 
@@ -180,6 +181,9 @@ def fs():
     if request.method == "POST":
         jsonData = request.get_json()
         print(jsonData)
+        usage = tool.percent2int(jsonData['Usage'])
+        jsonData['Usage'] = usage
+
         fileSystem = fileSystemMonitor.query.filter(
             and_(fileSystemMonitor.FilePath == jsonData['FilePath'], fileSystemMonitor.HostIP == jsonData['HostIP'])).first()
         tempHost = hosts.query.filter_by(hostIP=jsonData['HostIP']).first()
