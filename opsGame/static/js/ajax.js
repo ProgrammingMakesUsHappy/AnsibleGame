@@ -102,3 +102,23 @@ $("button#fileDo").click(function () {
         }
 	});
 });
+
+/**
+ * Created by qius on 2018/7/27.
+ */
+
+$("button#refresh").click(function () {
+	$.ajax({
+		type: 'get',
+		contentType: "application/json; charset=UTF-8",
+		url: "/getargs/",
+		dataType: 'json',
+		success:function (data) {
+            $("p#group").text(data['groupCount']);
+            $("p#run").text(data['alive']);
+            $("p#stop").text(data['offline']);
+            $("p#cmdCount").text(data['cmdCount']);
+        }
+    });
+});
+

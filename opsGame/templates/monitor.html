@@ -1,32 +1,41 @@
 {% extends "index.html" %}
 {% block content %}
-<div style="position:relative; float:left; margin:10px;padding-left:42px;">
-    <div style=" position:relative;float:left;  border-radius: 15px 50px 30px;background: grey;padding: 20px;width: 250px;height: 100px; ">
 
-       <h2 style="float:left;"><i class="fa fa-heartbeat" style="font-size:48px;color:#00FF00;"></i>ON:</h2>
-        <p id="onHosts" style="float:right;font-size:28px;padding:0px;margin:8px;color:#00FF00">1000</p>
-
-   </div>
-    <div style=" position:relative;float:left;  border-radius: 15px 50px 30px;background: grey;padding: 20px;width: 250px;height: 100px; ">
-
-       <h2 style="float:left;"><i class="fa fa-heartbeat" style="font-size:48px;color:red"></i>OFF:</h2>
-       <p id="offHosts" style="float:right;font-size:28px;padding:0px;margin:8px;color:#00FF00">1000</p>
-   </div>
-    <div style=" position:relative;float:left;  border-radius: 15px 50px 30px;background: grey;padding: 20px;width: 250px;height: 100px; ">
-
-       <h2 style="float:left;"><i class="fa fa-heartbeat" style="font-size:48px;color:blue"></i>AB:</h2>
-        <p id="" style="float:right;font-size:28px;padding:0px;margin:8px;color:#00FF00">1000</p>
-   </div>
-    <div style=" position:relative;float:left;  border-radius: 15px 50px 30px;background: grey;padding: 20px;width: 250px;height: 100px; ">
-
-       <h2 style="float:left;"><i class="fa fa-heartbeat" style="font-size:48px;color:yellow"></i>CD:</h2>
-        <p id="" style="float:right;font-size:28px;padding:0px;margin:8px;color:#00FF00">1000</p>
-   </div>
-    <div class="container-fluid" style="position:relative; float:left; margin:10px;padding-left:42px;background-color:#C0C0C0;border:2px solid;border-radius:25px;width:985px;">
-        <div style="height:100px;width:1050px;"></div>
-
+<div class="container" style="align-content: center;">
+    <div  style="padding-top: 15px;">
+  <div class="card bg-dark text-success" style="float:left; margin: 0 auto; padding:0 auto;width:23%">
+    <div class="card-body" style="margin: 0 auto; padding:0 auto;">
+        <i class="fa fa-heartbeat" style="color:#00FF00;">RUN:</i>
+        <p id="run" style="text-align: center;margin: 0 auto;padding: 0;font-size: large">{{ args['run'] }}</p>
+    </div>
+  </div>
+      <div class="card bg-dark text-danger" style="float:left; margin: 0 auto; padding:0 auto;width:23%">
+    <div class="card-body" style="margin: 0 auto; padding:0 auto;">
+        <i class="fa fa-heartbeat" style="color:red;">STOP:</i>
+        <p id="stop" style="text-align: center;margin: 0 auto;padding: 0;font-size: large">{{ args['stop'] }}</p>
+    </div>
+  </div>
+      <div class="card bg-dark text-warning" style="float:left; margin: 0 auto; padding:0 auto;width:23%">
+    <div class="card-body" style="margin: 0 auto; padding:0 auto;">
+        <i class="fa fa-heartbeat" style="color:yellow;">CMD:</i>
+        <p id="cmdCount" style="text-align: center;margin: 0 auto;padding: 0;font-size: large">{{ args['cmdCount'] }}</p>
+    </div>
+  </div>
+  <div class="card bg-dark text-info" style="float:left; margin: 0 auto; padding:0 auto;width:23%">
+    <div class="card-body" style="margin: 0 auto; padding:0 auto;">
+        <i class="fa fa-heartbeat" style="color:blue;">GROUP:</i>
+        <p id="group" style="text-align: center;margin: 0 auto;padding: 0;font-size: large">{{ args['group'] }}</p>
+    </div>
+  </div>
+  <div class="card bg-dark text-info" style="float:left; margin: 0 auto; padding:0 auto;width:8%">
+    <div class="card-body" style="margin: 0 auto; ;height:91px;">
+        <button id="refresh" type="button" class="btn btn-dark btn-sm"><i class="fa fa-refresh" style="color:green;font-size: 18px;"></i></button>
+         <p  style="text-align: center;margin: 0 auto;padding: 0;">RE</p>
+    </div>
+  </div>
     </div>
 </div>
+
 
 
 {% endblock %}

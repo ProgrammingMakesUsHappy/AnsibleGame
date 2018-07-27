@@ -19,9 +19,10 @@ class MyView(BaseView):
 
 class fileSystemView(ModelView):
     # 这三个变量定义管理员是否可以增删改，默认为True
-    can_delete = False
-    can_edit = False
+    can_delete = True
+    can_edit = True
     can_create = False
+    can_export = True
     # 这里是为了自定义显示的column名字
     column_labels = dict(
         # userName = u'用户名',
@@ -36,9 +37,10 @@ class fileSystemView(ModelView):
 
 class processMonitorViews(ModelView):
     # 这三个变量定义管理员是否可以增删改，默认为True
-    can_delete = False
-    can_edit = False
+    can_delete = True
+    can_edit = True
     can_create = False
+    can_export = True
     # 这里是为了自定义显示的column名字
     # column_labels = dict(
         #     # userName = u'用户名',
@@ -56,9 +58,10 @@ class processMonitorViews(ModelView):
 
 class hostsView(ModelView):
     # 这三个变量定义管理员是否可以增删改，默认为True
-    can_delete = False
-    can_edit = False
+    can_delete = True
+    can_edit = True
     can_create = False
+    can_export = True
     # 这里是为了自定义显示的column名字
     column_labels = dict(
         # userName = u'用户名',

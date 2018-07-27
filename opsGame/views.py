@@ -1,31 +1,64 @@
 #!/usr/bin/env python3
 #  -*- endcoding=UTF-8 -*-
-import time
 
+import time
+import commands, json
 from flask import request, session, url_for, json
 from sqlalchemy import and_
 from ansibleApi import runner
-
 from opsGame import app, db
 from flask import render_template
-import commands, json
-
-# 传入inventory路径
 from opsGame.models import processMonitor,fileSystemMonitor, hosts
 from opsGame.tools import tool
 
-ansible = runner.ansibleRunner('/etc/ansible/Inventory/hosts')
+
+# 传入inventory路径
+inventoryPath = '/etc/ansible/Inventory/'
+ansible = runner.ansibleRunner(inventoryPath)
+# 读取的inventory文件夹设置信息
+inventoryData = ansible.inventory
+# k-v结构，k为组名，v为组内hostIP
+group_kv_dict = inventoryData.groups
+# k-v结构，kv 相同
+host_kv_dict = inventoryData.hosts
+# group 组名列表
+group_k_list = list(group_kv_dict.keys())
+# 主机IP列表
+host_k_list = list(host_kv_dict.keys())
+# 分组的个数
+howManyGroups = len(group_k_list)
+# 主机的个数
+howManyHost = len(host_k_list)
+# 执行命令次数
+cmdCount = 0
+
+
+# 获取监控参数
+@app.route('/getargs/', methods=['GET'])
+def getArgs():
+
+    alive = hosts.query.filter_by(status=1).count()
+    argsData = {}
+    argsData['cmdCount'] = cmdCount
+    argsData['groupCount'] = howManyGroups-2
+    argsData['alive'] = alive
+    argsData['offline'] = howManyHost - alive
+    return json.dumps(argsData)
 
 
 # 主页
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    alive = hosts.query.filter_by(status=1).count()
+    args = {'cmdCount': cmdCount, 'group': howManyGroups - 2, 'run': alive, 'stop': howManyHost - alive}
+    return render_template('monitor.html',args=args)
 
 
+# 文件分发
 @app.route('/FileDo/', methods=['GET', 'POST'])
 def fileDo():
     if request.method == "POST":
+        ++cmdCount
         jsonData = request.get_json()
         # print(jsonData)
         host = jsonData['host']
@@ -63,7 +96,9 @@ def fileDo():
 
 @app.route('/Monitor/', methods=['GET', 'POST'])
 def monitor():
-    return render_template('monitor.html')
+    alive = hosts.query.filter_by(status=1).count()
+    args = {'cmdCount': cmdCount, 'group': howManyGroups-2, 'run': alive, 'stop': howManyHost-alive}
+    return render_template('monitor.html', args=args)
 
 
 @app.route('/Playbook/', methods=['GET', 'POST'])
@@ -128,6 +163,7 @@ def commandRun():
     return render_template('command.html')
 
 
+# 测试路由
 @app.route('/ops/testPing', methods=['GET'])
 def testPing():
     # 获取服务器磁盘信息
@@ -196,5 +232,19 @@ def fs():
             fileSystemMonitor.query.filter_by(FilePath=jsonData['FilePath'], HostIP=jsonData['HostIP']).update(
                 {'Time': now,
                  'Usage': jsonData['Usage']})
+    db.session.commit()
+    return 'ok'
+
+
+# 心跳链接
+@app.route('/pengpeng/', methods=['POST'])
+def pengpeng():
+    data = request.get_json()
+    now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    host = hosts.query.filter_by(hostIP=data['IP']).first()
+    if host is None:
+        print(data['IP']+'is unknown!')
+    else:
+        hosts.query.filter_by(hostIP=data['IP']).update({'timestamp': now})
     db.session.commit()
     return 'ok'

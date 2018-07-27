@@ -108,19 +108,27 @@ class hosts(db.Model):
     hostIP = db.Column(db.String(45), nullable=False)
     hostName = db.Column(db.String(45), nullable=True)
     hostGroup = db.Column(db.String(45), nullable=False)
+    status = db.Column(db.Integer, nullable= False ,default=0)
+    timestamp = db.Column(db.Time, nullable=False)
 
     def __init__(self, *args):
         if not args :
             self.hostIP = ''
             self.hostName = "deafult"
             self.hostGroup = ''
+            self.status = 0
+            self.timestamp = '1970-01-01 23:59:59'
 
         elif args:
             self.hostIP = args[0]
             self.hostName = args[1]
             self.hostGroup = args[2]
+            self.status = args[3]
+            self.timestamp = args[4]
 
     def __iter__(self):
         return [self.hostIP,
                 self.hostName,
-                self.hostGroup]
+                self.hostGroup,
+                self.status,
+                self.timestamp]
