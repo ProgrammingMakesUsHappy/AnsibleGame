@@ -9,7 +9,7 @@ from ansibleApi import runner
 from opsGame import app, db
 from flask import render_template
 from opsGame.models import processMonitor,fileSystemMonitor, hosts
-from opsGame.tools import tool
+from opsGame.tools.tools import tool
 
 
 # 传入inventory路径
@@ -19,6 +19,8 @@ ansible = runner.ansibleRunner(inventoryPath)
 inventoryData = ansible.inventory
 # k-v结构，k为组名，v为组内hostIP
 group_kv_dict = inventoryData.groups
+del group_kv_dict['all']
+del group_kv_dict['ungrouped']
 # k-v结构，kv 相同
 host_kv_dict = inventoryData.hosts
 # group 组名列表
@@ -39,26 +41,33 @@ def getArgs():
 
     alive = hosts.query.filter_by(status=1).count()
     argsData = {}
+    argsData['groupList'] = group_k_list
+    print(argsData['groupList'])
+    for group in group_k_list:
+        argsData[group+'_on'] = hosts.query.filter(and_(hosts.status == 1, hosts.hostGroup == group)).count()
+        argsData[group+'_off'] = hosts.query.filter(and_(hosts.status == 0, hosts.hostGroup == group)).count()
     argsData['cmdCount'] = cmdCount
-    argsData['groupCount'] = howManyGroups-2
+    argsData['groupCount'] = howManyGroups
     argsData['alive'] = alive
     argsData['offline'] = howManyHost - alive
     return json.dumps(argsData)
 
 
-# 主页
+# index
 @app.route('/', methods=['GET', 'POST'])
 def index():
     alive = hosts.query.filter_by(status=1).count()
-    args = {'cmdCount': cmdCount, 'group': howManyGroups - 2, 'run': alive, 'stop': howManyHost - alive}
-    return render_template('monitor.html',args=args)
+    args = {'cmdCount': cmdCount, 'group': howManyGroups, 'run': alive, 'stop': howManyHost - alive}
+    print(group_kv_dict)
+    return render_template('monitor.html', args=args, items=group_kv_dict, groupList=group_k_list)
 
 
 # 文件分发
 @app.route('/FileDo/', methods=['GET', 'POST'])
 def fileDo():
     if request.method == "POST":
-        ++cmdCount
+        global cmdCount
+        cmdCount += 1
         jsonData = request.get_json()
         # print(jsonData)
         host = jsonData['host']
@@ -98,7 +107,7 @@ def fileDo():
 def monitor():
     alive = hosts.query.filter_by(status=1).count()
     args = {'cmdCount': cmdCount, 'group': howManyGroups-2, 'run': alive, 'stop': howManyHost-alive}
-    return render_template('monitor.html', args=args)
+    return render_template('monitor.html', args=args, groupList=group_k_list, items=group_kv_dict)
 
 
 @app.route('/Playbook/', methods=['GET', 'POST'])
@@ -126,6 +135,8 @@ def shell():
 @app.route('/Command/', methods=["GET", "POST"])
 def commandRun():
     if request.method == "POST":
+        global cmdCount
+        cmdCount += 1
         jsonData = request.get_json()
         print(jsonData)
         host = jsonData['host']

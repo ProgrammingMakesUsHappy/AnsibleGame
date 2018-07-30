@@ -118,7 +118,27 @@ $("button#refresh").click(function () {
             $("p#run").text(data['alive']);
             $("p#stop").text(data['offline']);
             $("p#cmdCount").text(data['cmdCount']);
+            for(var i = 0, len = data['groupList'].length; i < len; i++){
+                // alert(data['groupList'][i]);
+                var hostNum = data[data['groupList'][i]+'_on'] + data[data['groupList'][i]+'_off'];
+                var onPercent = (data[data['groupList'][i]+'_on']/hostNum)*100;
+                var offPercent = (data[data['groupList'][i]+'_off']/hostNum)*100;
+                var onStr = onPercent.toString() + '%';
+                var offStr = offPercent.toString()+ '%';
+                $("#"+data['groupList'][i]+'-on').css("width",onStr);
+                $("#"+data['groupList'][i]+'-off').css("width",offStr);
+            };
         }
     });
 });
 
+
+/**
+ * Created by qius on 2018-07-30
+ */
+$(function() {
+    $( "#accordion" ).accordion();    
+  });
+
+
+ // 更新进度条

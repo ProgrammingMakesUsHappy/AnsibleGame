@@ -109,7 +109,7 @@ class hosts(db.Model):
     hostName = db.Column(db.String(45), nullable=True)
     hostGroup = db.Column(db.String(45), nullable=False)
     status = db.Column(db.Integer, nullable= False ,default=0)
-    timestamp = db.Column(db.Time, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
 
     def __init__(self, *args):
         if not args :
