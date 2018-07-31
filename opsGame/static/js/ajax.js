@@ -1,4 +1,32 @@
 /**
+ * function 7-31 ajax refresh
+ */
+function refresh() {
+    $.ajax({
+        type: 'get',
+        contentType: "application/json; charset=UTF-8",
+        url: "/getargs/",
+        dataType: 'json',
+        success: function (data) {
+            $("p#group").text(data['groupCount']);
+            $("p#run").text(data['alive']);
+            $("p#stop").text(data['offline']);
+            $("p#cmdCount").text(data['cmdCount']);
+            for (var i = 0, len = data['groupList'].length; i < len; i++) {
+                // alert(data['groupList'][i]);
+                var hostNum = data[data['groupList'][i] + '_on'] + data[data['groupList'][i] + '_off'];
+                var onPercent = (data[data['groupList'][i] + '_on'] / hostNum) * 100;
+                var offPercent = (data[data['groupList'][i] + '_off'] / hostNum) * 100;
+                var onStr = onPercent.toString() + '%';
+                var offStr = offPercent.toString() + '%';
+                $("#" + data['groupList'][i] + '-on').css("width", onStr);
+                $("#" + data['groupList'][i] + '-off').css("width", offStr);
+                $("#" + data['groupList'][i] + '-content').text(data[data['groupList'][i] +'_off_host']);            }
+            ;
+        }
+    });
+};
+/**
  * Created by qius on 2018/7/18.
  */
 
@@ -62,10 +90,11 @@ $("button#fileDo").click(function () {
 		url: "/FileDo/",
 		dataType: 'json',
 		data:JSON.stringify({
-				'host': $("input#host").val(),
+				'host': $(".host").val(),
 				'src':  $("input#src").val(),
 				'dest':	$("input#dest").val(),
 			}),
+
 		success:function (data) {
 			if(data.status == "success"){
 				// alert(data.success);
@@ -106,39 +135,19 @@ $("button#fileDo").click(function () {
 /**
  * Created by qius on 2018/7/27.
  */
+ // 更新进度条
+$("button#refresh").click(function (){
 
-$("button#refresh").click(function () {
-	$.ajax({
-		type: 'get',
-		contentType: "application/json; charset=UTF-8",
-		url: "/getargs/",
-		dataType: 'json',
-		success:function (data) {
-            $("p#group").text(data['groupCount']);
-            $("p#run").text(data['alive']);
-            $("p#stop").text(data['offline']);
-            $("p#cmdCount").text(data['cmdCount']);
-            for(var i = 0, len = data['groupList'].length; i < len; i++){
-                // alert(data['groupList'][i]);
-                var hostNum = data[data['groupList'][i]+'_on'] + data[data['groupList'][i]+'_off'];
-                var onPercent = (data[data['groupList'][i]+'_on']/hostNum)*100;
-                var offPercent = (data[data['groupList'][i]+'_off']/hostNum)*100;
-                var onStr = onPercent.toString() + '%';
-                var offStr = offPercent.toString()+ '%';
-                $("#"+data['groupList'][i]+'-on').css("width",onStr);
-                $("#"+data['groupList'][i]+'-off').css("width",offStr);
-            };
-        }
-    });
+    refresh();
 });
+
+
 
 
 /**
  * Created by qius on 2018-07-30
  */
-$(function() {
-    $( "#accordion" ).accordion();    
-  });
+$("div#accordion").accordion();
 
 
- // 更新进度条
+

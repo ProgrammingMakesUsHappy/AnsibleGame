@@ -1,10 +1,10 @@
 CREATE DATABASE  IF NOT EXISTS `gamedb` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `gamedb`;
--- MySQL dump 10.13  Distrib 5.7.22, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.23, for Linux (x86_64)
 --
 -- Host: localhost    Database: gamedb
 -- ------------------------------------------------------
--- Server version	5.7.22
+-- Server version	5.7.23
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -31,11 +31,11 @@ CREATE TABLE `fileSystemMonitor` (
   `HostName` varchar(45) NOT NULL,
   `FS` varchar(128) NOT NULL,
   `Volume` varchar(45) NOT NULL,
-  `Usage` varchar(45) NOT NULL,
+  `Usage` int(11) NOT NULL,
   `Time` varchar(45) NOT NULL DEFAULT 'now()',
   `Group` varchar(45) NOT NULL DEFAULT 'web',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `fileSystemMonitor` (
 
 LOCK TABLES `fileSystemMonitor` WRITE;
 /*!40000 ALTER TABLE `fileSystemMonitor` DISABLE KEYS */;
-INSERT INTO `fileSystemMonitor` VALUES (1,'/usr/','192.168.3.1','qiushi-X270-W10DG','/dev/nvme0n1p4','136G','34%','2018-07-25 09:26:08',''),(2,'/var/','192.168.3.1','qiushi-X270-W10DG','/dev/nvme0n1p4','136G','34%','2018-07-25 09:26:27','host'),(3,'','192.168.3.1','qiushi-X270-W10DG','udev','3.9G','0%','2018-07-25 10:43:17','host');
+INSERT INTO `fileSystemMonitor` VALUES (1,'/usr/','192.168.3.1','qiushi-X270-W10DG','/dev/nvme0n1p4','136G',34,'2018-07-25 09:26:08',''),(2,'/var/','192.168.3.1','qiushi-X270-W10DG','/dev/nvme0n1p4','136G',34,'2018-07-25 09:26:27','host'),(3,'','192.168.3.1','qiushi-X270-W10DG','udev','3.9G',0,'2018-07-25 16:03:51','host'),(4,'/home/','192.168.3.1','qiushi-X270-W10DG','/dev/nvme0n1p4','136G',34,'2018-07-25 18:58:19','host');
 /*!40000 ALTER TABLE `fileSystemMonitor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-07-25 11:21:25
+-- Dump completed on 2018-07-31 19:21:09

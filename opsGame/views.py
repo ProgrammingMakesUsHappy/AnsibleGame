@@ -20,7 +20,6 @@ inventoryData = ansible.inventory
 # k-v结构，k为组名，v为组内hostIP
 group_kv_dict = inventoryData.groups
 del group_kv_dict['all']
-del group_kv_dict['ungrouped']
 # k-v结构，kv 相同
 host_kv_dict = inventoryData.hosts
 # group 组名列表
@@ -36,18 +35,22 @@ cmdCount = 0
 
 
 # 获取监控参数
-@app.route('/getargs/', methods=['GET'])
+@app.route('/getargs/', methods=['get'])
 def getArgs():
 
     alive = hosts.query.filter_by(status=1).count()
     argsData = {}
     argsData['groupList'] = group_k_list
-    print(argsData['groupList'])
     for group in group_k_list:
         argsData[group+'_on'] = hosts.query.filter(and_(hosts.status == 1, hosts.hostGroup == group)).count()
+        offHost = hosts.query.filter(and_(hosts.status == 0, hosts.hostGroup == group)).all()
+        hostList = []
+        for host in offHost:
+            hostList.append(host.hostIP)
+        argsData[group + '_off_host'] = hostList
         argsData[group+'_off'] = hosts.query.filter(and_(hosts.status == 0, hosts.hostGroup == group)).count()
     argsData['cmdCount'] = cmdCount
-    argsData['groupCount'] = howManyGroups
+    argsData['groupCount'] = howManyGroups - 1
     argsData['alive'] = alive
     argsData['offline'] = howManyHost - alive
     return json.dumps(argsData)
@@ -57,8 +60,7 @@ def getArgs():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     alive = hosts.query.filter_by(status=1).count()
-    args = {'cmdCount': cmdCount, 'group': howManyGroups, 'run': alive, 'stop': howManyHost - alive}
-    print(group_kv_dict)
+    args = {'cmdCount': cmdCount, 'group': howManyGroups -1, 'run': alive, 'stop': howManyHost - alive}
     return render_template('monitor.html', args=args, items=group_kv_dict, groupList=group_k_list)
 
 
@@ -69,7 +71,7 @@ def fileDo():
         global cmdCount
         cmdCount += 1
         jsonData = request.get_json()
-        # print(jsonData)
+        print(jsonData)
         host = jsonData['host']
         module_name = jsonData['src']
         module_args = jsonData['dest']
@@ -100,7 +102,7 @@ def fileDo():
                 data['hosts'][dict] = result['unreachable'][dict]
         return json.dumps(data)
 
-    return render_template('filedo.html')
+    return render_template('filedo.html', groupList=group_k_list)
 
 
 @app.route('/Monitor/', methods=['GET', 'POST'])

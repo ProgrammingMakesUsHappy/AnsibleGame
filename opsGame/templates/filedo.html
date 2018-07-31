@@ -1,7 +1,38 @@
 {% extends "index.html" %}
 {% block content %}
-    <h1 style="text-align: center">File do test!</h1>
- <div style="padding-left: 200px; padding-right: 200px; margin: 0 auto;">
+
+<div class="container" style="padding: 5px;">
+     <!--- select option  -->
+    <form class="bs-example bs-example-form" style="position: relative;background-color: rgba(10,11,3,0.78);color:#eff58f;">
+     <select id="host" style="width: 30%;height:300px;position:static;float:left;background-color: rgba(3,11,5,0.64);color: navajowhite;" multiple class="form-control">
+     {% for gp in groupList %}
+          <option value="{{ gp }}">{{ gp }}</option>
+     {% endfor %}
+     </select>
+     <h2 style="text-align: center;">
+      <i class="fa fa-cloud-download" style="font-size: 300%;color:#18e873;position: relative;margin:0 auto;padding:0 auto;"></i>
+     </h2>
+
+     <label style="width: 70%;text-align: center;margin: auto;padding: 2px;">LocalPath</label>
+     <input id="src" value="~/" type="text" class="form-control" style="position:static; width:60%;margin:0 auto;" />
+
+     <label style="width: 70%;text-align: center;margin: auto;padding: 2px;">RemotePath:</label>
+     <input id="dest" value="~/" type="text" class="form-control" style="position:static; width:60%;margin:0 auto;" />
+        <br/>
+     <button id="fileDo" type="submit" class="form-control" style="position:static;width:20%;margin:0 auto;">Submit</button>
+    </form>
+ </div>
+     <!--- opiton over  -->
+
+
+    <!-- 执行结果反馈  -->
+    <div class="container">
+        <p id="p1" style="text-align: center">RESULT:</p>
+        <br>
+        <p id="p2"></p>
+    </div>
+
+     <div style="padding-left: 200px; padding-right: 200px; margin: 0 auto;">
     <form  method="POST">
         <div class="form-group">
             <label for="host">Hosts:</label>
@@ -18,14 +49,6 @@
         <button type='button' id="fileDo"> submit</button>
 
     </form>
-
-    <div>
-        <p id="p1" style="text-align: center">RESULT:</p>
-        <br>
-        <p id="p2"></p>
-
-
-    </div>
-
 </div>
+
 {% endblock %}
