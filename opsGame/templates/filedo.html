@@ -4,7 +4,7 @@
 <div class="container" style="padding: 5px;">
      <!--- select option  -->
     <form class="bs-example bs-example-form" style="position: relative;background-color: rgba(10,11,3,0.78);color:#eff58f;">
-     <select id="host" style="width: 30%;height:300px;position:static;float:left;background-color: rgba(3,11,5,0.64);color: navajowhite;" multiple class="form-control">
+     <select class="host" style="width: 30%;height:300px;position:static;float:left;background-color: rgba(3,11,5,0.64);color: navajowhite;" multiple class="form-control">
      {% for gp in groupList %}
           <option value="{{ gp }}">{{ gp }}</option>
      {% endfor %}
@@ -19,7 +19,7 @@
      <label style="width: 70%;text-align: center;margin: auto;padding: 2px;">RemotePath:</label>
      <input id="dest" value="~/" type="text" class="form-control" style="position:static; width:60%;margin:0 auto;" />
         <br/>
-     <button id="fileDo" type="submit" class="form-control" style="position:static;width:20%;margin:0 auto;">Submit</button>
+     <input id="fileDo" type="button" class="form-control" style="position:static;width:20%;margin:0 auto;" value="Submit"/>
     </form>
  </div>
      <!--- opiton over  -->
@@ -27,28 +27,11 @@
 
     <!-- 执行结果反馈  -->
     <div class="container">
-        <p id="p1" style="text-align: center">RESULT:</p>
+        <h2><i>RESULT:</i></h2>
         <br>
-        <p id="p2"></p>
+        <p id="p2"> </p>
     </div>
 
-     <div style="padding-left: 200px; padding-right: 200px; margin: 0 auto;">
-    <form  method="POST">
-        <div class="form-group">
-            <label for="host">Hosts:</label>
-            <input type="text" class="form-control" id="host" placeholder="Enter hostGroup/all/ip">
-        </div>
-        <div class="form-group">
-          <label for="src">Src:</label>
-          <input type="text" class="form-control" id="src" placeholder="Enter where to get">
-        </div>
-        <div class="dest">
-          <label for="module_args">Dest:</label>
-          <input type="text" class="form-control" id="dest" placeholder="Enter where to put">
-        </div>
-        <button type='button' id="fileDo"> submit</button>
 
-    </form>
-</div>
 
 {% endblock %}

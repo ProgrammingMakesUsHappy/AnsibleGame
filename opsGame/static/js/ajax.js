@@ -82,7 +82,7 @@ $("button#sub").click(function () {
  * Created by qius on 2018/7/19.
  */
 
-$("button#fileDo").click(function () {
+$("input#fileDo").click(function () {
 
 	$.ajax({
 		type: 'post',
@@ -90,14 +90,14 @@ $("button#fileDo").click(function () {
 		url: "/FileDo/",
 		dataType: 'json',
 		data:JSON.stringify({
-				'host': $(".host").val(),
+				'host': $(".host").val().toString(),
 				'src':  $("input#src").val(),
 				'dest':	$("input#dest").val(),
 			}),
-
 		success:function (data) {
+		    alert(data);
 			if(data.status == "success"){
-				// alert(data.success);
+				alert(data.success);
 				$("#p2").append("<p><h5>SuccessHosts：</h5>");
                 for(var i = 0; i < data.successHosts.length; i++){
                     $("#p2").append("<li>"+data.successHosts[i]+"</li>");

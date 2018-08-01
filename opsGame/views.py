@@ -68,23 +68,18 @@ def index():
 @app.route('/FileDo/', methods=['GET', 'POST'])
 def fileDo():
     if request.method == "POST":
+        ansible = runner.ansibleRunner(inventoryPath)
         global cmdCount
         cmdCount += 1
         jsonData = request.get_json()
-        print(jsonData)
         host = jsonData['host']
         module_name = jsonData['src']
         module_args = jsonData['dest']
-
         ansible.run(host, 'copy', 'src=' + module_name + ' ' + 'dest=' + module_args)
+        # ansible.run('web129', 'copy', 'src=~/test.abc dest=~/abc/')
+
         # 结果
         result = ansible.get_result()
-        # 成功
-        succ = result['success']
-        # 失败
-        failed = result['failed']
-        # 不可到达
-        unreachable = result['unreachable']
         data = {}
         data['status'] = 'success'
         data['successHosts'] = list(result['success'].keys())
@@ -101,8 +96,8 @@ def fileDo():
             for dict in result['unreachable']:
                 data['hosts'][dict] = result['unreachable'][dict]
         return json.dumps(data)
-
-    return render_template('filedo.html', groupList=group_k_list)
+    else:
+        return render_template('filedo.html', groupList=group_k_list)
 
 
 @app.route('/Monitor/', methods=['GET', 'POST'])
