@@ -1,32 +1,52 @@
 {% extends "index.html" %}
 {% block content %}
-   <h1 style="text-align: center">Let's test some ansible.command!</h1>
-<div style="padding-left: 200px; padding-right: 200px; margin: 0 auto;">
-    <form  method="POST">
-        <div class="form-group">
-            <label for="host">Hosts:</label>
-            <input type="text" class="form-control" id="host" placeholder="Enter hostGroup/all/ip" value="all">
-        </div>
-        <div class="form-group">
-          <label for="module_name">Module_name:(Ex:'command')</label>
-          <input type="text" class="form-control" id="module_name" placeholder="Enter module_name" value="command">
-        </div>
-        <div class="form-group">
-          <label for="module_args">Module_args:(Ex:'uname -a')</label>
-          <input type="text" class="form-control" id="module_args" placeholder="Enter module_args" value="uname -a">
-        </div>
-        <button type='button' id="sub"> submit</button>
+<div class="container" style="padding: 5px;">
+    <!--- select option  -->
+    <form class="bs-example bs-example-form" style="position: relative;background-color: rgba(10,11,3,0.78);color:#eff58f;">
+     <select class="host" style="width: 30%;height:300px;position:static;float:left;background-color: rgba(3,11,5,0.64);color: navajowhite;" multiple class="form-control">
+         {% for gp in groupList %}
+              <option value="{{ gp }}" style="text-align: center;font-size: 20px;">{{ gp }}</option>
+         {% endfor %}
+     </select>
+     <select class="module" style="width: 30%;height:300px;position:static;float:left;background-color: rgba(3,11,5,0.64);color: navajowhite;" multiple class="form-control">
+         <option value="command" style="text-align: center;font-size: 20px;">command</option>
+         <option value="shell" style="text-align: center;font-size: 20px;">shell</option>
+         <option value="script" style="text-align: center;font-size: 20px;">script</option>
+         <option value="copy" style="text-align: center;font-size: 20px;">copy</option>
+         <option value="file" style="text-align: center;font-size: 20px;">file</option>
+         <option value="yum" style="text-align: center;font-size: 20px;">yum</option>
+         <option value="get_URL" style="text-align: center;font-size: 20px;">get_url</option>
+         <option value="service" style="text-align: center;font-size: 20px;">service</option>
+         <option value="synchronize" style="text-align: center;font-size: 20px;">synchronize</option>
+         <option value="DIY" style="text-align: center;font-size: 20px;">自定义</option>
+     </select>
 
+     <h2 style="text-align: center;">
+      <i class="fa fa-cogs" style="font-size: 300%;color:#18e873;position: relative;margin:0 auto;padding:0 auto;padding-top: 3px;"></i>
+     </h2>
+
+     <label style="width: 40%;text-align: center;margin: auto;padding: 2px;">DIY-Module：</label>
+     <input id="module_name" type="text" class="form-control" style="position:static; width:30%;margin:0 auto;" />
+
+     <label style="width: 40%;text-align: center;margin: auto;padding: 2px;">arguments:</label>
+     <input id="module_args" value="whoami" type="text" class="form-control" style="position:static; width:30%;margin:0 auto;" />
+        <br/>
+     <input id="commandsub" type="button" class="form-control" style="position:static;width:20%;margin:0 auto;" value="Submit"/>
     </form>
 
-    <div>
-        <p id="p1" style="text-align: center">result：</p>
+     <!--- opiton over  -->
+
+    <!-- 执行结果反馈  -->
+    <div class="container">
+        <h2><i>RESULT:</i></h2>
         <br>
-        <p id="p2"></p>
-
-
+        <div style='width:100%; height: auto;text-align: center;background-color: #8c8c8c;'>
+        <p id="p2"> </p>
+        </div>
     </div>
 
 </div>
+
+
 
 {% endblock %}

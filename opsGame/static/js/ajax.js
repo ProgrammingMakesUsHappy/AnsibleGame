@@ -30,7 +30,12 @@ function refresh() {
  * Created by qius on 2018/7/18.
  */
 
-$("button#sub").click(function () {
+$("input#commandsub").click(function () {
+    if(($("input#module_name").val() != '') || $(".module").val().toString() == 'DIY'){
+        var moduleName = $("input#module_name").val();
+    }else {
+        moduleName = $(".module").val().toString();
+    };
 
 	$.ajax({
 		type: 'post',
@@ -38,39 +43,40 @@ $("button#sub").click(function () {
 		url: "/Command/",
 		dataType: 'json',
 		data:JSON.stringify({
-				'host': 	    $("input#host").val(),
-				'module_name':  $("input#module_name").val(),
+				'host': 	    $(".host").val().toString(),
+				'module_name':  moduleName,
 				'module_args':	$("input#module_args").val(),
 			}),
 		success:function (data) {
 			if(data.status == "success"){
-				// alert(data.success);
-				$("#p2").append("<p><h5>SuccessHosts：</h5>");
+				$("#p2").append("<h5 style='color: #40e829'>SuccessHosts：</h5><ul>");
                 for(var i = 0; i < data.successHosts.length; i++){
                     $("#p2").append("<li>"+data.successHosts[i]+"</li>");
 
                 }
-                $("#p2").append("</p><br/>");
-                $("#p2").append("<p><h5>FailedsHosts：</h5>");
+                $("#p2").append("</ul><br/>");
+                $("#p2").append("<h5 style='color: #ea0e1f'>FailedsHosts：</h5><ul>");
                 for(var i = 0; i < data.failedHosts.length; i++){
                     $("#p2").append("<li>"+data.failedHosts[i]+"</li>");
 
                 }
-                $("#p2").append("</p><br/>");
-                $("#p2").append("<p><h5>UnreachableHosts：</h5>");
+                $("#p2").append("</ul><br/>");
+                $("#p2").append("<h5 style='color: #c0b93d'> UnreachableHosts：</h5><ul>");
                 for(var i = 0; i < data.unreachableHosts.length; i++){
                     $("#p2").append("<li>"+data.unreachableHosts[i]+"</li>");
 
                 }
-                $("#p2").append("</p><br/>");
-				$("#p2").append("<h5>HostDetails:</h5><br/>");
+                $("#p2").append("</ul><br/>");
+				$("#p2").append("<h5 style='color: #eea236'>HostDetails:</h5> <ul><br/>");
                     // $("#p2").append(data.hosts+"<br/>");
                     // $("#p2").append(data.hosts[0]['stdout']+"<br/>");
-                for(let jsondata in data.hosts){
-                    $("#p2").append("<p>"+jsondata+"===>>"+JSON.stringify(data.hosts[jsondata])+"</p><br/>");
-                }
 
-                $("#p2").append('================分割===================');
+                for(let jsondata in data.hosts){
+                    $("#p2").append("<text style='color:orangered'>"+jsondata+"===>>"+JSON.stringify(data.hosts[jsondata])+"</text><br/>");
+                }
+                $("#p2").append("</ul><br/>");
+
+                $("#p2").append('<h3 style="text-align: center">=======================分割========================</h3>');
 
 			}else if(data.status == "fail"){
 				$("#p2").append('程序就没执行吧？老铁！');
@@ -95,35 +101,35 @@ $("input#fileDo").click(function () {
 				'dest':	$("input#dest").val(),
 			}),
 		success:function (data) {
-		    alert(data);
 			if(data.status == "success"){
-				alert(data.success);
-				$("#p2").append("<p><h5>SuccessHosts：</h5>");
+				$("#p2").append("<h5 style='color: #40e829'>SuccessHosts：</h5><ul>");
                 for(var i = 0; i < data.successHosts.length; i++){
                     $("#p2").append("<li>"+data.successHosts[i]+"</li>");
 
                 }
-                $("#p2").append("</p><br/>");
-                $("#p2").append("<p><h5>FailedsHosts：</h5>");
+                $("#p2").append("</ul><br/>");
+                $("#p2").append("<h5 style='color: #ea0e1f'>FailedsHosts：</h5><ul>");
                 for(var i = 0; i < data.failedHosts.length; i++){
                     $("#p2").append("<li>"+data.failedHosts[i]+"</li>");
 
                 }
-                $("#p2").append("</p><br/>");
-                $("#p2").append("<p><h5>UnreachableHosts：</h5>");
+                $("#p2").append("</ul><br/>");
+                $("#p2").append("<h5 style='color: #c0b93d'> UnreachableHosts：</h5><ul>");
                 for(var i = 0; i < data.unreachableHosts.length; i++){
                     $("#p2").append("<li>"+data.unreachableHosts[i]+"</li>");
 
                 }
-                $("#p2").append("</p><br/>");
-				$("#p2").append("<h5>HostDetails:</h5><br/>");
+                $("#p2").append("</ul><br/>");
+				$("#p2").append("<h5 style='color: #eea236'>HostDetails:</h5> <ul><br/>");
                     // $("#p2").append(data.hosts+"<br/>");
                     // $("#p2").append(data.hosts[0]['stdout']+"<br/>");
-                for(let jsondata in data.hosts){
-                    $("#p2").append("<p>"+jsondata+"===>>"+JSON.stringify(data.hosts[jsondata])+"</p><br/>");
-                }
 
-                $("#p2").append('================分割===================');
+                for(let jsondata in data.hosts){
+                    $("#p2").append("<text style='color:orangered'>"+jsondata+"===>>"+JSON.stringify(data.hosts[jsondata])+"</text><br/>");
+                }
+                $("#p2").append("</ul><br/>");
+
+                $("#p2").append('<h3 style="text-align: center">=======================分割========================</h3>');
 
 			}else if(data.status == "fail"){
 				$("#p2").append('程序就没执行吧？老铁！');
@@ -137,7 +143,6 @@ $("input#fileDo").click(function () {
  */
  // 更新进度条
 $("button#refresh").click(function (){
-
     refresh();
 });
 

@@ -6,7 +6,7 @@
     <form class="bs-example bs-example-form" style="position: relative;background-color: rgba(10,11,3,0.78);color:#eff58f;">
      <select class="host" style="width: 30%;height:300px;position:static;float:left;background-color: rgba(3,11,5,0.64);color: navajowhite;" multiple class="form-control">
      {% for gp in groupList %}
-          <option value="{{ gp }}">{{ gp }}</option>
+          <option value="{{ gp }}" style="text-align: center;font-size: 20px;">{{ gp }}</option>
      {% endfor %}
      </select>
      <h2 style="text-align: center;">
@@ -29,7 +29,9 @@
     <div class="container">
         <h2><i>RESULT:</i></h2>
         <br>
+        <div style='width:100%; height: auto;text-align: center;background-color: #8c8c8c;'>
         <p id="p2"> </p>
+        </div>
     </div>
 
 

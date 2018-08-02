@@ -8,7 +8,7 @@ from sqlalchemy import and_
 from ansibleApi import runner
 from opsGame import app, db
 from flask import render_template
-from opsGame.models import processMonitor,fileSystemMonitor, hosts
+from opsGame.models import processMonitor,fileSystemMonitor, hosts, memoryMonitor
 from opsGame.tools.tools import tool
 
 
@@ -19,7 +19,6 @@ ansible = runner.ansibleRunner(inventoryPath)
 inventoryData = ansible.inventory
 # k-v结构，k为组名，v为组内hostIP
 group_kv_dict = inventoryData.groups
-del group_kv_dict['all']
 # k-v结构，kv 相同
 host_kv_dict = inventoryData.hosts
 # group 组名列表
@@ -50,7 +49,7 @@ def getArgs():
         argsData[group + '_off_host'] = hostList
         argsData[group+'_off'] = hosts.query.filter(and_(hosts.status == 0, hosts.hostGroup == group)).count()
     argsData['cmdCount'] = cmdCount
-    argsData['groupCount'] = howManyGroups - 1
+    argsData['groupCount'] = howManyGroups - 2
     argsData['alive'] = alive
     argsData['offline'] = howManyHost - alive
     return json.dumps(argsData)
@@ -60,7 +59,7 @@ def getArgs():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     alive = hosts.query.filter_by(status=1).count()
-    args = {'cmdCount': cmdCount, 'group': howManyGroups -1, 'run': alive, 'stop': howManyHost - alive}
+    args = {'cmdCount': cmdCount, 'group': howManyGroups -2, 'run': alive, 'stop': howManyHost - alive}
     return render_template('monitor.html', args=args, items=group_kv_dict, groupList=group_k_list)
 
 
@@ -139,19 +138,11 @@ def commandRun():
         host = jsonData['host']
         module_name = jsonData['module_name']
         module_args = jsonData['module_args']
-
+        ansible = runner.ansibleRunner(inventoryPath)
         ansible.run(host, module_name, module_args)
         # 结果
         result = ansible.get_result()
-        # 成功
-        succ = result['success']
-        # 失败
-        failed = result['failed']
-        # 不可到达
-        unreachable = result['unreachable']
-        # print(succ)
-        # print(failed)
-        # # print(unreachable)
+        print(result)
         data = {}
         data['status'] = 'success'
         data['successHosts'] = list(result['success'].keys())
@@ -168,7 +159,7 @@ def commandRun():
             for dict in result['unreachable']:
                 data['hosts'][dict] = result['unreachable'][dict]
         return json.dumps(data)
-    return render_template('command.html')
+    return render_template('command.html', groupList=group_k_list)
 
 
 # 测试路由
@@ -200,20 +191,10 @@ def processmonitor():
     if request.method == "POST":
         jsonData = request.get_json()
         print(jsonData)
-        process = processMonitor.query.filter(and_(processMonitor.pName == jsonData['pName'], processMonitor.HostIP == jsonData['HostIP'])).first()
-        tempHost = hosts.query.filter_by(hostIP=jsonData['HostIP']).first()
-        group = tempHost.hostGroup
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        if process is None:
-            db.session.add(processMonitor(jsonData['pName'], jsonData['HostName'], jsonData['HostIP'], jsonData["CPU"],
-                                          jsonData['Memory'], jsonData['RunTime'], jsonData["StartTime"],
-                                          group, now))
-        else:
-            processMonitor.query.filter_by(pName=jsonData['pName'], HostIP=jsonData['HostIP']).update(
-                {'CPU': jsonData["CPU"],
-                 'Memory': jsonData['Memory'],
-                 'RunTime': jsonData['RunTime'],
-                 'Time': now})
+        db.session.merge(processMonitor(jsonData['pName'], jsonData['HostName'], jsonData['HostIP'], jsonData["CPU"],
+                                        jsonData['Memory'], jsonData['RunTime'], jsonData["StartTime"],
+                                        '', now, jsonData['HostIP']+':'+jsonData['pName']))
     db.session.commit()
     return 'ok'
 
@@ -227,19 +208,9 @@ def fs():
         print(jsonData)
         usage = tool.percent2int(jsonData['Usage'])
         jsonData['Usage'] = usage
-
-        fileSystem = fileSystemMonitor.query.filter(
-            and_(fileSystemMonitor.FilePath == jsonData['FilePath'], fileSystemMonitor.HostIP == jsonData['HostIP'])).first()
-        tempHost = hosts.query.filter_by(hostIP=jsonData['HostIP']).first()
-        group = tempHost.hostGroup
         now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        if fileSystem is None:
-            db.session.add(fileSystemMonitor(jsonData['FilePath'], jsonData['HostIP'], jsonData['HostName'], jsonData['FS'],
-                                          jsonData['Volume'], jsonData['Usage'], now, group))
-        else:
-            fileSystemMonitor.query.filter_by(FilePath=jsonData['FilePath'], HostIP=jsonData['HostIP']).update(
-                {'Time': now,
-                 'Usage': jsonData['Usage']})
+        db.session.merge(fileSystemMonitor(jsonData['FilePath'], jsonData['HostIP'], jsonData['HostName'], jsonData['FS'],
+                                          jsonData['Volume'], jsonData['Usage'], now, ''))
     db.session.commit()
     return 'ok'
 
@@ -256,3 +227,17 @@ def pengpeng():
         hosts.query.filter_by(hostIP=data['IP']).update({'timestamp': now})
     db.session.commit()
     return 'ok'
+
+
+# 内存监控
+@app.route('/memory/', methods=['POST'])
+def memMonitor():
+    data = request.get_json()
+    now = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    model = memoryMonitor(hostIP=data['HostIP'], cache=data['cache'], free=data['free'],
+                          share=data['share'], total=data['total'], used=data['used'],
+                          available=data['available'], time=now)
+    print(model)
+    db.session.merge(model)
+    db.session.commit()
+    return "copy that!"

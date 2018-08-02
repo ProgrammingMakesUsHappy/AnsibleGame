@@ -6,7 +6,7 @@ from opsGame import db
 class processMonitor(db.Model):
     __tablename__ = 'processMonitor'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    pNameAndIP = db.Column(db.String(45), primary_key=True)
     pName = db.Column(db.String(45), nullable=False)
     HostIP = db.Column(db.String(45), nullable=False)
     HostName = db.Column(db.String(45), nullable=False)
@@ -14,12 +14,13 @@ class processMonitor(db.Model):
     Memory = db.Column(db.Float, nullable=False)
     RunTime = db.Column(db.String(45), nullable=False)
     StartTime = db.Column(db.String(45), nullable=False)
-    Group = db.Column(db.String(45), nullable=True)
+    Group = db.Column(db.String(45))
     Time = db.Column(db.String(45), nullable=False)
 
 
     def __init__(self, *args):
         if not args :
+            self.pNameAndIP = "192.168.1.1:"+"top"
             self.pName = 'TestScholl'
             self.HostName = "TestLocation"
             self.HostIP = "192.168.1.1"
@@ -39,6 +40,7 @@ class processMonitor(db.Model):
             self.StartTime = args[6]
             self.Group = args[7]
             self.Time = args[8]
+            self.pNameAndIP = args[9]
 
 
     def __iter__(self):
@@ -50,16 +52,16 @@ class processMonitor(db.Model):
                 self.RunTime,
                 self.StartTime,
                 self.Group,
-                self.Time]
+                self.Time,
+                self.pNameAndIP]
 
 
 class fileSystemMonitor(db.Model):
     __tablename__ = 'fileSystemMonitor'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     HostIP = db.Column(db.String(45), nullable=False)
     HostName = db.Column(db.String(45), nullable=False)
-    FilePath = db.Column(db.String(128), nullable=False)
+    FilePath = db.Column(db.String(128), primary_key=True, nullable=False)
     FS = db.Column(db.String(128), nullable=False)
     Volume = db.Column(db.String(45), nullable=False)
     Usage = db.Column(db.Integer, nullable=False)
@@ -104,8 +106,7 @@ class fileSystemMonitor(db.Model):
 class hosts(db.Model):
     __tablename__ = 'hosts'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    hostIP = db.Column(db.String(45), nullable=False)
+    hostIP = db.Column(db.String(45), primary_key=True, nullable=False)
     hostName = db.Column(db.String(45), nullable=True)
     hostGroup = db.Column(db.String(45), nullable=False)
     status = db.Column(db.Integer, nullable= False ,default=0)
@@ -132,3 +133,46 @@ class hosts(db.Model):
                 self.hostGroup,
                 self.status,
                 self.timestamp]
+
+class memoryMonitor(db.Model):
+    __tablename__ = 'memorymonitor'
+    __table_args__ = {'mysql_collate': 'utf8_general_ci'}
+    hostIP = db.Column(db.String(45),  primary_key=True, nullable=False)
+    total = db.Column(db.Integer)
+    used = db.Column(db.Integer)
+    free = db.Column(db.Integer)
+    share = db.Column(db.Integer)
+    cache = db.Column(db.Integer)
+    available = db.Column(db.Integer)
+    time = db.Column(db.DateTime, nullable=False)
+
+    def __int__(self, *args):
+        if not args:
+            self.hostIP = '1.1.1.1'
+            self.time = '2018-08-01 00:00:00'
+            self.available = 0
+            self.cache = 0
+            self.free = 0
+            self.share = 0
+            self.total = 0
+            self.used = 0
+        else:
+            self.total = args[0]
+            self.used  = args[1]
+            self.free  = args[2]
+            self.share = args[3]
+            self.cache = args[4]
+            self.available= args[5]
+            self.time = args[6]
+            self.hostIP = args[7]
+
+    def __iter__(self):
+        return[self.hostIP,
+               self.time,
+               self.available,
+               self.used,
+               self.total,
+               self.share,
+               self.free,
+               self.cache]
+
