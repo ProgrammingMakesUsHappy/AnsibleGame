@@ -25,14 +25,13 @@ DROP TABLE IF EXISTS `hosts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `hosts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `hostName` varchar(45) DEFAULT NULL,
   `hostIP` varchar(45) NOT NULL,
+  `hostName` varchar(45) DEFAULT NULL,
   `hostGroup` varchar(45) NOT NULL,
   `status` int(11) NOT NULL DEFAULT '0',
   `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`hostIP`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,7 +40,7 @@ CREATE TABLE `hosts` (
 
 LOCK TABLES `hosts` WRITE;
 /*!40000 ALTER TABLE `hosts` DISABLE KEYS */;
-INSERT INTO `hosts` VALUES (1,'web128','192.168.3.128','web128',0,'2018-07-27 18:23:32'),(2,'web129','192.168.3.129','web129',0,'2018-07-27 18:23:32'),(3,'web130','192.168.3.130','web130',0,'2018-07-27 18:23:32'),(4,'host','192.168.3.1','host',0,'2018-07-27 18:23:32');
+INSERT INTO `hosts` VALUES ('192.168.3.1','host','host',0,'2018-07-27 18:23:32'),('192.168.3.128','web128','web128',1,'2018-07-27 18:23:32'),('192.168.3.129','web129','web129',0,'2018-07-27 18:23:32'),('192.168.3.130','web130','web130',0,'2018-07-27 18:23:32');
 /*!40000 ALTER TABLE `hosts` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-07-31 19:21:09
+-- Dump completed on 2018-08-02 10:42:20

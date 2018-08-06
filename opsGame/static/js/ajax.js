@@ -72,7 +72,8 @@ $("input#commandsub").click(function () {
                     // $("#p2").append(data.hosts[0]['stdout']+"<br/>");
 
                 for(let jsondata in data.hosts){
-                    $("#p2").append("<text style='color:orangered'>"+jsondata+"===>>"+JSON.stringify(data.hosts[jsondata])+"</text><br/>");
+                    $("#p2").append("<p style='color: #46b8da'>"+jsondata+"</p>");
+                    $("#p2").append("<text style='color:orangered'>"+JSON.stringify(data.hosts[jsondata])+"</text><br/>");
                 }
                 $("#p2").append("</ul><br/>");
 
@@ -125,7 +126,8 @@ $("input#fileDo").click(function () {
                     // $("#p2").append(data.hosts[0]['stdout']+"<br/>");
 
                 for(let jsondata in data.hosts){
-                    $("#p2").append("<text style='color:orangered'>"+jsondata+"===>>"+JSON.stringify(data.hosts[jsondata])+"</text><br/>");
+                    $("#p2").append("<p style='color: #46b8da'>"+jsondata+"</p>");
+                    $("#p2").append("<text style='color:orangered'>"+JSON.stringify(data.hosts[jsondata])+"</text><br/>");
                 }
                 $("#p2").append("</ul><br/>");
 

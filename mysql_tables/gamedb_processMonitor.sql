@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `processMonitor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `processMonitor` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pNameAndIP` varchar(45) NOT NULL,
   `pName` varchar(45) NOT NULL,
   `HostIP` varchar(45) NOT NULL,
   `HostName` varchar(45) NOT NULL,
@@ -34,9 +34,10 @@ CREATE TABLE `processMonitor` (
   `RunTime` varchar(45) NOT NULL,
   `StartTime` varchar(45) NOT NULL,
   `Time` varchar(45) NOT NULL DEFAULT 'now()',
-  `Group` varchar(45) NOT NULL DEFAULT 'web',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+  `Group` varchar(45) DEFAULT 'web',
+  PRIMARY KEY (`pNameAndIP`),
+  UNIQUE KEY `pNameAndIP_UNIQUE` (`pNameAndIP`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +46,7 @@ CREATE TABLE `processMonitor` (
 
 LOCK TABLES `processMonitor` WRITE;
 /*!40000 ALTER TABLE `processMonitor` DISABLE KEYS */;
-INSERT INTO `processMonitor` VALUES (1,'top','192.168.3.1','qiushi-X270-W10DG',0,0,'0:02','08:38','2018-07-25 11:16:51','host'),(2,'top','192.168.3.128','localhost.localdomain',0,0,'0:00','19:17','2018-07-25 11:21:50','');
+INSERT INTO `processMonitor` VALUES ('192.168.3.1:top','top','192.168.3.1','qiushi-X270-W10DG',0.2,1,'0:12','08:42','2018-08-02 10:19:07','');
 /*!40000 ALTER TABLE `processMonitor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -58,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-07-31 19:21:09
+-- Dump completed on 2018-08-02 10:42:20

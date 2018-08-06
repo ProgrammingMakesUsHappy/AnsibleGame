@@ -134,6 +134,7 @@ class hosts(db.Model):
                 self.status,
                 self.timestamp]
 
+
 class memoryMonitor(db.Model):
     __tablename__ = 'memorymonitor'
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
